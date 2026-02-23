@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -21,9 +21,9 @@ namespace StreamAxis.Api.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     CurrentVersion = table.Column<string>(type: "TEXT", maxLength: 32, nullable: false),
                     LatestApkUrl = table.Column<string>(type: "TEXT", maxLength: 2048, nullable: true),
-                    IsUpdateRequired = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsUpdateRequired = table.Column<bool>(type: "BOOLEAN", nullable: false),
                     UpdateMessage = table.Column<string>(type: "TEXT", maxLength: 1024, nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,9 +41,9 @@ namespace StreamAxis.Api.Migrations
                     PosterUrl = table.Column<string>(type: "TEXT", maxLength: 1024, nullable: true),
                     StreamUrl = table.Column<string>(type: "TEXT", maxLength: 2048, nullable: true),
                     Category = table.Column<int>(type: "INTEGER", nullable: false),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    IsActive = table.Column<bool>(type: "BOOLEAN", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,11 +58,11 @@ namespace StreamAxis.Api.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Username = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
                     Password = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
-                    ExpirationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    IsActive = table.Column<bool>(type: "BOOLEAN", nullable: false),
                     MaxDevices = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,7 +78,7 @@ namespace StreamAxis.Api.Migrations
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
                     DeviceId = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
                     DeviceName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
-                    LastLoginDate = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    LastLoginDate = table.Column<DateTime>(type: "timestamp", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,8 +100,8 @@ namespace StreamAxis.Api.Migrations
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
                     DeviceId = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
                     Token = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
-                    ExpiresAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    ExpiresAt = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -122,8 +122,8 @@ namespace StreamAxis.Api.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
                     ContentId = table.Column<int>(type: "INTEGER", nullable: false),
-                    LastPositionTicks = table.Column<long>(type: "INTEGER", nullable: false),
-                    LastUpdated = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    LastPositionTicks = table.Column<long>(type: "BIGINT", nullable: false),
+                    LastUpdated = table.Column<DateTime>(type: "timestamp", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,16 +145,16 @@ namespace StreamAxis.Api.Migrations
             migrationBuilder.InsertData(
                 table: "AppConfigs",
                 columns: new[] { "Id", "CurrentVersion", "IsUpdateRequired", "LatestApkUrl", "UpdateMessage", "UpdatedAt" },
-                values: new object[] { 1, "1.0", false, null, null, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) });
+                values: new object[] { 1, "1.0", false, null, null, new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc) });
 
             migrationBuilder.InsertData(
                 table: "Contents",
                 columns: new[] { "Id", "Category", "CreatedAt", "Description", "IsActive", "PosterUrl", "StreamUrl", "Title", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Demo stream", true, "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg", "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "Big Buck Bunny", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { 2, 1, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Demo stream", true, "https://mango.blender.org/wp-content/uploads/tearsofsteel_thumbnail.jpg", "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8", "Tears of Steel", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) },
-                    { 3, 0, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "24/7 demo channel", true, null, "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "Live TV Demo", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc) }
+                    { 1, 1, new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc), "Demo stream", true, "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg", "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "Big Buck Bunny", new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+                    { 2, 1, new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc), "Demo stream", true, "https://mango.blender.org/wp-content/uploads/tearsofsteel_thumbnail.jpg", "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8", "Tears of Steel", new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+                    { 3, 0, new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc), "24/7 demo channel", true, null, "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "Live TV Demo", new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
                 });
 
             migrationBuilder.InsertData(
@@ -162,8 +162,8 @@ namespace StreamAxis.Api.Migrations
                 columns: new[] { "Id", "CreatedAt", "ExpirationDate", "IsActive", "MaxDevices", "Password", "UpdatedAt", "Username" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2035, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), true, 10, "admin", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "admin" },
-                    { 2, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 2, 1, 0, 0, 0, 0, DateTimeKind.Utc), true, 1, "demo", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "demo" }
+                    { 1, new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2035, 1, 1, 0, 0, 0, DateTimeKind.Utc), true, 10, "admin", new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc), "admin" },
+                    { 2, new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2025, 2, 1, 0, 0, 0, DateTimeKind.Utc), true, 1, "demo", new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc), "demo" }
                 });
 
             migrationBuilder.CreateIndex(
