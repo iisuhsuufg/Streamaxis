@@ -71,5 +71,9 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 }
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 
+// Make the app listen on all interfaces and the Railway-assigned port
+app.Urls.Add($"http://*:{port}");
 app.Run();
+
