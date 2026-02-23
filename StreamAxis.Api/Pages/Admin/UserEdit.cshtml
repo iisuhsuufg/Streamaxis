@@ -1,0 +1,77 @@
+@page
+@model StreamAxis.Api.Pages.Admin.UserEditModel
+@{
+    ViewData["Title"] = "Edit User";
+    Layout = "_AdminLayout";
+}
+<h1>Edit User: @(Model.User?.Username ?? "?")</h1>
+@if (Model.User == null)
+{
+    <p>User not found.</p>
+}
+else
+{
+<form method="post" asp-page-handler="Save">
+    <input type="hidden" name="id" value="@Model.User.Id" />
+    <table>
+        <tr>
+            <td>Username</td>
+            <td>@Model.User.Username</td>
+        </tr>
+        <tr>
+            <td>Active</td>
+            <td>
+                <input type="checkbox" name="isActive" value="true" checked="@Model.User.IsActive" />
+            </td>
+        </tr>
+        <tr>
+            <td>Expiration Date</td>
+            <td><input type="date" name="expirationDate" value="@Model.User.ExpirationDate.ToString("yyyy-MM-dd")" /></td>
+        </tr>
+        <tr>
+            <td>Max Devices</td>
+            <td>
+                <input type="number" name="maxDevices" value="@Model.User.MaxDevices" min="1" max="99" />
+                <small>Basic=1, Premium=3, Family=5</small>
+            </td>
+        </tr>
+    </table>
+    <button type="submit">Save</button>
+</form>
+
+<h2>Registered Devices</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Device Name</th>
+            <th>Device Id</th>
+            <th>Last Login</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var d in Model.Devices)
+        {
+            <tr>
+                <td>@d.DeviceName</td>
+                <td>@d.DeviceId</td>
+                <td>@d.LastLoginDate.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>
+                    <form method="post" asp-page-handler="RemoveDevice" style="display:inline">
+                        <input type="hidden" name="userId" value="@Model.User.Id" />
+                        <input type="hidden" name="deviceId" value="@d.Id" />
+                        <button type="submit">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (Model.Devices.Any())
+{
+    <form method="post" asp-page-handler="ResetDevices" style="margin-top:1rem">
+        <input type="hidden" name="userId" value="@Model.User.Id" />
+        <button type="submit">Reset all devices</button>
+    </form>
+}
+}

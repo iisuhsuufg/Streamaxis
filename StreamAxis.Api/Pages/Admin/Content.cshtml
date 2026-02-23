@@ -1,0 +1,113 @@
+@page
+@model StreamAxis.Api.Pages.Admin.ContentModel
+@{
+    ViewData["Title"] = "Content";
+    Layout = "_AdminLayout";
+}
+
+<div class="page-header">
+    <h1>Content Library</h1>
+</div>
+
+@if (Model.ImportResult != null)
+{
+    <div class="alert @(Model.ImportResult.Error != null ? "alert-info" : "alert-success")">
+        Import Complete: Live TV +@Model.ImportResult.LiveTvAdded, Movies +@Model.ImportResult.MoviesAdded, TV Shows +@Model.ImportResult.TvShowsAdded
+        @if (Model.ImportResult.Error != null)
+        {
+            <br/><span style="opacity: 0.8;">Note: @Model.ImportResult.Error</span>
+        }
+    </div>
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3>Import Content</h3>
+    </div>
+    <div class="card-body">
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">Scrape content from external sources to populate your library.</p>
+        <form method="post" asp-page-handler="Scrape" style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+            <button type="submit" class="btn btn-primary">Run Full Scrape (DLHD + MyFlixer)</button>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Manage Content</h3>
+        <div style="display: flex; gap: 16px; align-items: center;">
+            <form method="get" class="search-form">
+                <select name="category" style="min-width: 150px;">
+                    <option value="">All Categories</option>
+                    @if (Model.CategoryFilter == 0)
+                    {
+                        <option value="0" selected>Live TV</option>
+                    }
+                    else
+                    {
+                        <option value="0">Live TV</option>
+                    }
+                    @if (Model.CategoryFilter == 1)
+                    {
+                        <option value="1" selected>Movies</option>
+                    }
+                    else
+                    {
+                        <option value="1">Movies</option>
+                    }
+                    @if (Model.CategoryFilter == 2)
+                    {
+                        <option value="2" selected>TV Shows</option>
+                    }
+                    else
+                    {
+                        <option value="2">TV Shows</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-secondary">Filter</button>
+            </form>
+            <a asp-page="/Admin/ContentEdit" class="btn btn-primary">Add Content</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model.Contents)
+                {
+                    <tr>
+                        <td>@c.Id</td>
+                        <td><strong>@c.Title</strong></td>
+                        <td>
+                            <span class="badge" style="background: rgba(232, 93, 4, 0.2); color: var(--primary);">
+                                @c.Category
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge @(c.IsActive ? "badge-success" : "badge-danger")">
+                                @(c.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </td>
+                        <td>
+                            <a asp-page="/Admin/ContentEdit" asp-route-id="@c.Id" class="btn btn-sm btn-secondary">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (!Model.Contents.Any())
+        {
+            <p style="color: var(--text-secondary); text-align: center; padding: 40px;">
+                No content found. Click "Run Full Scrape" to import content or add manually.
+            </p>
+        }
+    </div>
+</div>

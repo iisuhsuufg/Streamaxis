@@ -1,0 +1,47 @@
+@page
+@model StreamAxis.Api.Pages.Admin.ContentEditModel
+@{
+    ViewData["Title"] = Model.Id.HasValue ? "Edit Content" : "Add Content";
+    Layout = "_AdminLayout";
+}
+<h1>@(Model.Id.HasValue ? "Edit" : "Add") Content</h1>
+<form method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <table>
+        <tr>
+            <td>Title</td>
+            <td><input type="text" name="title" value="@Model.Title" required style="width:300px" /></td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><textarea name="description" rows="2" style="width:300px">@Model.Description</textarea></td>
+        </tr>
+        <tr>
+            <td>Poster URL</td>
+            <td><input type="text" name="posterUrl" value="@Model.PosterUrl" style="width:400px" /></td>
+        </tr>
+        <tr>
+            <td>Stream URL</td>
+            <td><input type="text" name="streamUrl" value="@Model.StreamUrl" style="width:400px" /></td>
+        </tr>
+        <tr>
+            <td>Category</td>
+            <td>
+                <select name="category">
+                    <option value="0" selected="@(Model.Category == 0)">Live TV</option>
+                    <option value="1" selected="@(Model.Category == 1)">Movie</option>
+                    <option value="2" selected="@(Model.Category == 2)">TV Show</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Active</td>
+            <td><input type="checkbox" name="isActive" value="true" checked="@Model.IsActive" /></td>
+        </tr>
+    </table>
+    <button type="submit">Save</button>
+</form>
+@if (Model.Id.HasValue)
+{
+    <p><a asp-page="/Admin/Content">Back to list</a></p>
+}

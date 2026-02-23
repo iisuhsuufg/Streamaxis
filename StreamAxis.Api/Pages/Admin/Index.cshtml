@@ -1,0 +1,40 @@
+@page
+@model StreamAxis.Api.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<div class="page-header">
+    <h1>Dashboard</h1>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h4>Welcome Back</h4>
+        <div class="value" style="font-size: 24px; color: var(--text-primary);">Admin</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>Quick Actions</h3>
+    </div>
+    <div class="card-body">
+        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <a asp-page="/Admin/Users" class="btn btn-primary">Manage Users</a>
+            <a asp-page="/Admin/Content" class="btn btn-secondary">Content Library</a>
+            <a asp-page="/Admin/Config" class="btn btn-secondary">App Settings</a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3>System Overview</h3>
+    </div>
+    <div class="card-body">
+        <p style="color: var(--text-secondary);">StreamAxis Admin Panel v1.0</p>
+        <p style="color: var(--text-secondary); margin-top: 8px;">Manage your streaming platform, users, and content from this dashboard.</p>
+    </div>
+</div>
