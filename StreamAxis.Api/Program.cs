@@ -4,9 +4,11 @@ using StreamAxis.Api.Middleware;
 using StreamAxis.Api.Scraping;
 using StreamAxis.Api.Services;
 using Npgsql;
+using System;
+
 var builder = WebApplication.CreateBuilder(args);
 
-/ Convert DATABASE_URL to Npgsql connection string format
+// Convert DATABASE_URL to Npgsql connection string format
 var databaseUrl = builder.Configuration.GetConnectionString("DATABASE_URL");
 
 string connectionString;
@@ -65,6 +67,5 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 }
-
 
 app.Run();
