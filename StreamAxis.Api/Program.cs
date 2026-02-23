@@ -3,12 +3,25 @@ using StreamAxis.Api.Data;
 using StreamAxis.Api.Middleware;
 using StreamAxis.Api.Scraping;
 using StreamAxis.Api.Services;
-
+using Npgsql;
 var builder = WebApplication.CreateBuilder(args);
 
-// Use PostgreSQL if DATABASE_URL is available, otherwise fall back to SQLite
-var connectionString = builder.Configuration.GetConnectionString("DATABASE_URL") ?? 
-                      builder.Configuration.GetConnectionString("DefaultConnection");
+/ Convert DATABASE_URL to Npgsql connection string format
+var databaseUrl = builder.Configuration.GetConnectionString("DATABASE_URL");
+
+string connectionString;
+if (!string.IsNullOrEmpty(databaseUrl))
+{
+    // Parse the PostgreSQL URL format
+    var databaseUri = new Uri(databaseUrl);
+    var userInfo = databaseUri.UserInfo.Split(':');
+    
+    connectionString = $"Host={databaseUri.Host};Port={databaseUri.Port};Database={databaseUri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true;";
+}
+else
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+}
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));  // Changed from UseSqlite to UseNpgsql
@@ -52,5 +65,6 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 }
+
 
 app.Run();
