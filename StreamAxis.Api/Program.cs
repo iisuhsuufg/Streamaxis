@@ -8,17 +8,35 @@ using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Convert DATABASE_URL to Npgsql connection string format
-var databaseUrl = builder.Configuration.GetConnectionString("DATABASE_URL");
+// ✅ Convert DATABASE_URL to Npgsql connection string safely
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
 string connectionString;
+
 if (!string.IsNullOrEmpty(databaseUrl))
 {
-    // Parse the PostgreSQL URL format
-    var databaseUri = new Uri(databaseUrl);
-    var userInfo = databaseUri.UserInfo.Split(':');
-    
-    connectionString = $"Host={databaseUri.Host};Port={databaseUri.Port};Database={databaseUri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true;";
+    try
+    {
+        var databaseUri = new Uri(databaseUrl);
+        var userInfo = databaseUri.UserInfo.Split(':');
+
+        var builderNpgsql = new NpgsqlConnectionStringBuilder
+        {
+            Host = databaseUri.Host,
+            Port = databaseUri.Port,
+            Database = databaseUri.AbsolutePath.TrimStart('/'),
+            Username = userInfo[0],
+            Password = userInfo.Length > 1 ? userInfo[1] : string.Empty,
+            SslMode = SslMode.Require,
+            TrustServerCertificate = true
+        };
+
+        connectionString = builderNpgsql.ConnectionString;
+    }
+    catch
+    {
+        throw new Exception("DATABASE_URL is invalid. Check format: postgres://user:pass@host:port/dbname");
+    }
 }
 else
 {
@@ -62,12 +80,11 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapRazorPages();
 
+// ✅ Run EF migrations on startup
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-   db.Database.Migrate();
+    db.Database.Migrate();
 }
 
-
 app.Run();
-
